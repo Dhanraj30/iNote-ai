@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Excalidraw } from "@excalidraw/excalidraw";
-//import "@excalidraw/excalidraw/dist/excalidraw.min.css"; // Correct CSS import
+//import "@excalidraw/excalidraw/dist/excalidraw.min.css"; // Ensure CSS is imported
 
 // Create a wrapper component that directly returns <Excalidraw />
 const ExcalidrawWrapper = () => {

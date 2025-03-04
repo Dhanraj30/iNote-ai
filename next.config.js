@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
+//const path = require('path');
 const nextConfig = {
+ 
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
@@ -9,6 +11,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+ 
 };
 
 module.exports = nextConfig;

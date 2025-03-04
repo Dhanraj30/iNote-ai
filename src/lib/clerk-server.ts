@@ -1,5 +1,8 @@
-import { Clerk } from "@clerk/backend";
+import { Clerk } from "@clerk/clerk-sdk-node";
 
-export const clerk = Clerk({
+// Initialize Clerk with the secret key
+const clerk = Clerk({
   apiKey: process.env.CLERK_SECRET_KEY,
 });
+ 
+export { clerk };

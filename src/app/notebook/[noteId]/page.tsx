@@ -1,10 +1,10 @@
 import DeleteButton from "@/components/DeleteButton";
 import TipTapEditor from "@/components/TipTapEditor";
 import { Button } from "@/components/ui/button";
-import { clerk } from "@/lib/clerk-server";
+//import { clerk } from "@/lib/clerk-server";
 import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
-import { auth } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -16,12 +16,14 @@ type Props = {
   };
 };
 
-const NotebookPage = async ({ params: { noteId } }: Props) => {
-  const { userId } = await auth();
+const NotebookPage = async ({ params }: Props) => {
+  const { noteId } =  params;
+  const { userId } =  await auth();
   if (!userId) {
     return redirect("/dashboard");
   }
-  const user = await clerk.users.getUser(userId);
+  const client = clerkClient
+  const user = await client.users.getUser(userId);
   const notes = await db
     .select()
     .from($notes)

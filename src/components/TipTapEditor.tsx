@@ -110,8 +110,15 @@ import Text from "@tiptap/extension-text";
 import axios from "axios";
 import { NoteType } from "@/lib/db/schema";
 import { useCompletion } from "ai/react";
-import ExcalidrawWrapper from "./ExcaliDrawWrapper"; // Import the Excalidraw wrapper
+import dynamic from "next/dynamic";
+//import ExcalidrawWrapper from "./ExcaliDrawWrapper"; // Import the Excalidraw wrapper
 import { Coffee } from "lucide-react";
+
+// Dynamically import ExcalidrawWrapper to avoid SSR issues
+const ExcalidrawWrapper = dynamic(
+  () => import("./ExcaliDrawWrapper"),
+  { ssr: false }
+);
 type Props = { note: NoteType };
 
 const TipTapEditor = ({ note }: Props) => {
