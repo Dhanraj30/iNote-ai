@@ -116,8 +116,8 @@ import { Coffee } from "lucide-react";
 
 // Dynamically import ExcalidrawWrapper to avoid SSR issues
 const ExcalidrawWrapper = dynamic(
-  () => import("./ExcaliDrawWrapper"),
-  { ssr: false }
+  async () =>(await import("./ExcaliDrawWrapper")).default,
+  { ssr: false, },
 );
 type Props = { note: NoteType };
 

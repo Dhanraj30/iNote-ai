@@ -240,9 +240,7 @@ const DashboardPage = async ( props: Props ) => {
         {/* Tip */}
         <div className="mt-8 flex items-center justify-center gap-2 text-[#8a7456] font-serif italic">
           <Coffee size={16} />
-          <span>Tip: Press</span>
-          <kbd className="px-2 py-1 bg-[#e9e2cc] rounded text-xs font-mono">Ctrl + N</kbd>
-          <span>to create a new note</span>
+          <span>build with Coffe!</span>
         </div>
       </div>
     </div>
