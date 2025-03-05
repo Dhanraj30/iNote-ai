@@ -107,12 +107,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CreateNoteDialog from "@/components/CreateNoteDialog"
+//import { headers } from "next/headers"
 
-const DashboardPage = async () => {
-  const { userId } = auth()
+type Props = {}
+
+const DashboardPage = async ( props: Props ) => {
+  const { userId } = await auth()
+  //const headersData = await headers()
   const notes = await db.select().from($notes).where(eq($notes.userId, userId!))
 
   return (
+    <>
     <div className="min-h-screen bg-[#f8f5e6] bg-[url('/paper-texture.svg')]">
       {/* Left binding effect */}
       <div className="fixed left-0 top-0 bottom-0 w-6 md:w-12 bg-[#e2d9bc] shadow-inner">
@@ -235,12 +240,11 @@ const DashboardPage = async () => {
         {/* Tip */}
         <div className="mt-8 flex items-center justify-center gap-2 text-[#8a7456] font-serif italic">
           <Coffee size={16} />
-          <span>Tip: Press</span>
-          <kbd className="px-2 py-1 bg-[#e9e2cc] rounded text-xs font-mono">Ctrl + N</kbd>
-          <span>to create a new note</span>
+          <span>build with Coffe!</span>
         </div>
       </div>
     </div>
+  </>
   )
 }
 
