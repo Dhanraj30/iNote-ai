@@ -1,6 +1,7 @@
+// [Your existing imports remain the same]
 import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
-import { uploadFileToFirebase } from "@/lib/firebase";
+import { uploadFileToSupabase } from "@/lib/supabase";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -10,25 +11,34 @@ export async function POST(req: Request) {
     if (!noteId) {
       return new NextResponse("Note ID is required", { status: 400 });
     }
-    // extract out the dalle imageurl
-    // save it to firebase
+
     const notes = await db
       .select()
       .from($notes)
       .where(eq($notes.id, parseInt(noteId)));
+
     if (!notes[0].imageUrl) {
       return new NextResponse("no image url", { status: 400 });
     }
 
-    const firebase_url = await uploadFileToFirebase(
-      notes[0].imageUrl,
-      notes[0].name
-    );
-    // update the note with the firebase url
+    // Fetch the existing image blob
+    const response = await fetch(notes[0].imageUrl);
+    const blob = await response.blob();
+
+    // Upload to Supabase
+    const supabaseUrl = await uploadFileToSupabase(blob, notes[0].name);
+    
+    if (!supabaseUrl) {
+      return new NextResponse("Failed to upload image to Supabase", { status: 500 });
+    }
+
+    console.log("Supabase URL:", supabaseUrl);
+
+    // Update the note with the Supabase URL
     await db
       .update($notes)
       .set({
-        imageUrl: firebase_url,
+        imageUrl: supabaseUrl,
       })
       .where(eq($notes.id, parseInt(noteId)));
       

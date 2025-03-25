@@ -93,7 +93,7 @@ export async function generateImagePrompt(name: string): Promise<string> {
   }
 }
 
-export async function generateImage(image_description: string): Promise<string> {
+export async function generateImage(image_description: string): Promise<Blob> {
 //export const generateImage = async (image_description: string) => {
   try {
     // Use a text-to-image model
@@ -106,18 +106,13 @@ export async function generateImage(image_description: string): Promise<string> 
         num_inference_steps: 50, // Adjust the number of inference steps for better quality
       },
     });
-    console.log("Hugging Face API response:", response);
+    //console.log("Hugging Face API response:", response);
 
-     // Check if the response is a Blob or a URL
-     if (response instanceof Blob) {
-      // Convert the Blob to a base64 string and create a data URL
-      const arrayBuffer = await response.arrayBuffer();
-      const base64 = Buffer.from(arrayBuffer).toString("base64");
-      const imageUrl = `data:image/png;base64,${base64}`;
-      return imageUrl;
-    } else if (typeof response === "string") {
-      // If the response is a URL, return it directly
-      return response;
+     // Ensure the response is a Blob
+    if (response instanceof Blob) {
+      //const image_url = URL.createObjectURL(response);
+      //console.log("Hugging Face API URL:", image_url);
+      return response; // Return the URL of the Blob in string 
     } else {
       throw new Error("Unexpected response format from Hugging Face API");
     }
