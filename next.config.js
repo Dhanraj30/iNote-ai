@@ -3,7 +3,7 @@
 const nextConfig = {
  
   images: {
-    domains: ["firebasestorage.googleapis.com"],
+    domains: ['uopuugowtrffvweopnkw.supabase.co'],
   },
   typescript: {
     ignoreBuildErrors: true,

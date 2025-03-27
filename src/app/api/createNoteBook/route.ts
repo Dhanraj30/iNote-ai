@@ -1,8 +1,8 @@
 // /api/createNoteBook
-
 import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
 import { generateImage, generateImagePrompt } from "@/lib/openai";
+import { uploadFileToSupabase } from "@/lib/supabase";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -30,27 +30,35 @@ export async function POST(req: Request) {
       });
     }
 
-    // Generate image URL
-    const image_url = await generateImage(image_description);
-    if (!image_url) {
+    // Generate image Blob
+    const imageBlob = await generateImage(image_description);
+    if (!imageBlob) {
       return new NextResponse("Failed to generate image", { status: 500 });
     }
-  const note_ids = await db
-    .insert($notes)
-    .values({
-      name,
-      userId,
-      imageUrl: image_url,
-    })
-    .returning({
-      insertedId: $notes.id,
-    });
 
-  return NextResponse.json({
-    note_id: note_ids[0].insertedId,
-  });
-} catch (error) {
-  console.error(error);
-  return new NextResponse("Internal Server Error", { status: 500 });
-}
+    // Upload Blob to Supabase and get public URL
+    const imageUrl = await uploadFileToSupabase(imageBlob, name);
+    if (!imageUrl) {
+      return new NextResponse("Failed to upload image to Supabase", { status: 500 });
+    }
+
+    // Insert into database with  image blob in string
+    const note_ids = await db
+      .insert($notes)
+      .values({
+        name,
+        userId,
+        imageUrl: imageUrl,
+      })
+      .returning({
+        insertedId: $notes.id,
+      });
+
+    return NextResponse.json({
+      note_id: note_ids[0].insertedId,
+    });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }
