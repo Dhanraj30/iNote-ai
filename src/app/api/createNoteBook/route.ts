@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       return new NextResponse("Failed to upload image to Supabase", { status: 500 });
     }
 
-    // Insert into database with Supabase URL
+    // Insert into database with  image blob in string
     const note_ids = await db
       .insert($notes)
       .values({
